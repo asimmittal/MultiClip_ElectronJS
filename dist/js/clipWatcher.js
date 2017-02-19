@@ -29,7 +29,6 @@ function getClipboardData() {
     if (currContent.image != null && currContent.plaintext == lastContent) doNext = false;else if (currContent.plaintext == lastContent) doNext = false;
 
     if (doNext) {
-        console.log("---> Sending new clip @", new Date());
         lastContent = currContent.plaintext;
         ipc.send("clipWatcher_newClip", currContent);
     }

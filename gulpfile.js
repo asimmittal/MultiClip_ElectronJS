@@ -37,8 +37,8 @@ gulp.task('less', function(){
 gulp.task('js', function() {
     return browserify({                                                 
         extensions: ['.js', '.jsx'],                                    
-        entries: srcPaths.srcDir + "index.js",
-        transform: [reactify, babelify.configure({presets: ["es2015"]})]
+        entries: srcPaths.srcDir + "index.jsx",
+        transform: [babelify.configure({presets: ["es2015","react"]})]
     })
     .bundle()                                                           
     .on("error",function(err){console.log("Error : " + err.message);})  

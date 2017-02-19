@@ -8,6 +8,7 @@ app.on("ready", function(){
     let mainWindow = new BrowserWindow({
         width: 400, 
         height: 800,
+        resizable: false,
         title: "MultiClip",
         backgroundColor: '#ededed'   
     });
@@ -23,12 +24,11 @@ app.on("ready", function(){
 
     //render the main window
     mainWindow.loadURL(`file://${__dirname}/dist/index.html`);
-    mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools({mode: "detach"});
 
     //render the clip watcher window
     clipWatcher.loadURL(`file://${__dirname}/dist/clipwatcher.html`);    
-    clipWatcher.webContents.openDevTools({mode: "detach"});
-
+    
     //handle init events for both windows and save their event handles
     //we'll need them later to communicate between these windows
     ipcMain.on("mainWindow_init",(e,a)=>{ eventHandle_main = e;});
@@ -39,11 +39,9 @@ app.on("ready", function(){
     ipcMain.on("clipWatcher_newClip",(e,a)=>{
         //now push this to the mainWindow using its handle
         if(a) {
-            console.log("--> relaying new clip @",new Date());
             eventHandle_main.sender.send('_newData',a);
         }
     });
-
 });
 
 
