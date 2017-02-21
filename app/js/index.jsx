@@ -1,6 +1,8 @@
 
 import DataStore from "./dataStore";
 
+console.log(process.cwd(),__dirname);
+
 /********************************************************************* 
  * Now render the application using the ClipList component
 **********************************************************************/
@@ -8,7 +10,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import ClipList from "./clipList";
 
-var listHandle = ReactDOM.render(<ClipList/>, document.getElementById("app"));
+var clipList = ReactDOM.render(<ClipList/>, document.getElementById("app"));
 
 /********************************************************************* 
  * Setup the electron specific functionality viz. IPC to listen
@@ -25,8 +27,9 @@ ipc.send("mainWindow_init","");
 //save that new data item
 ipc.on("_newData",(e,a)=>{
     if(a){ 
+        a.timestamp = new Date();
         new DataStore().save(a);
-        listHandle.showDataStore();
+        clipList.updateData();
     }
 });
 

@@ -11,7 +11,8 @@ var babelify = require("babelify");
 var distPaths = {
     baseDir: "./dist",
     srcDir: "./dist/js/",
-    styleDir: "./dist/css/"
+    styleDir: "./dist/css/",
+    imgDir: "./dist/img/"
 };
 
 var srcPaths = {
@@ -19,7 +20,8 @@ var srcPaths = {
     srcDir: "./app/js/",
     styleDir: "./app/less/",
     othersDir: "./app/others/",
-    htmlDir: "./app/html/"
+    htmlDir: "./app/html/",
+    imgDir: "./app/img/"
 };
 
 gulp.task("clean",function(){
@@ -68,4 +70,9 @@ gulp.task("html",function(){
         .pipe(gulp.dest(distPaths.baseDir))
 });
 
-gulp.task("default", ['clean','js','others','less','html'], ()=>{});
+gulp.task("img", function(){
+    gulp.src(srcPaths.imgDir + "/*")
+        .pipe(gulp.dest(distPaths.imgDir))
+});
+
+gulp.task("default", ['clean','js','others','less','html','img'], ()=>{});

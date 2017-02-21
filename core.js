@@ -1,14 +1,15 @@
 const electron = require('electron');
 const ipcMain = electron.ipcMain;
 const {app, BrowserWindow} = electron;
+const fs = require("fs");
 
 app.on("ready", function(){
 
     //create the main window
     let mainWindow = new BrowserWindow({
-        width: 400, 
+        minWidth: 390, 
+        width: 400,
         height: 800,
-        resizable: false,
         title: "MultiClip",
         backgroundColor: '#ededed'   
     });
@@ -28,7 +29,8 @@ app.on("ready", function(){
 
     //render the clip watcher window
     clipWatcher.loadURL(`file://${__dirname}/dist/clipwatcher.html`);    
-    
+    //clipWatcher.webContents.openDevTools({mode: "detach"});
+
     //handle init events for both windows and save their event handles
     //we'll need them later to communicate between these windows
     ipcMain.on("mainWindow_init",(e,a)=>{ eventHandle_main = e;});
@@ -36,10 +38,19 @@ app.on("ready", function(){
 
     //handle 'clipWatcher_newClip' -> fired by clipWatcher when new clip
     //data is available
-    ipcMain.on("clipWatcher_newClip",(e,a)=>{
+    ipcMain.on("clipWatcher_newClip",(e,data)=>{
         //now push this to the mainWindow using its handle
-        if(a) {
-            eventHandle_main.sender.send('_newData',a);
+        if(data) {
+            data.fileName = null;
+        
+            if(data['image']){
+                var distDir = "./dist/" ;
+                var fileName = data.id + ".png";
+                data.fileName = fileName;
+                fs.writeFileSync(distDir + fileName,data.image,"binary");
+            }
+            
+            eventHandle_main.sender.send('_newData',data);
         }
     });
 });

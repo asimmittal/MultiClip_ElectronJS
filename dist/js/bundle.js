@@ -1,5 +1,5 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
@@ -29,13 +29,37 @@ var ClipItem = function (_React$Component) {
     }
 
     _createClass(ClipItem, [{
-        key: "render",
+        key: 'render',
         value: function render() {
+            var data = this.props.data;
+            var isImage = data.fileName && data.fileName.length > 0 ? true : false;
+            var imgStyle = isImage ? 'block' : 'none';
+            var filePath = isImage ? data.fileName : "";
+            var classType = isImage ? "image" : "text";
+
+            var label = data.text;
+            var lblStyle = !isImage ? 'block' : 'none';
+            var tstamp = data.timeString;
+
             return _react2.default.createElement(
-                "li",
-                { className: "clipItem" },
-                _react2.default.createElement("div", { className: "typeIcon" }),
-                _react2.default.createElement("div", { className: "container" })
+                'li',
+                { className: 'clipItem' },
+                _react2.default.createElement('div', { className: "typeIcon " + classType }),
+                _react2.default.createElement(
+                    'div',
+                    { className: 'container' },
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'label', style: { display: lblStyle } },
+                        label
+                    ),
+                    _react2.default.createElement('div', { className: 'img', style: { display: imgStyle, backgroundImage: "url('" + filePath + "')", backgroundSize: 'cover' } }),
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'tstamp' },
+                        tstamp
+                    )
+                )
             );
         }
     }]);
@@ -77,25 +101,32 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var ClipList = function (_React$Component) {
     _inherits(ClipList, _React$Component);
 
-    function ClipList() {
+    function ClipList(props, context) {
         _classCallCheck(this, ClipList);
 
-        return _possibleConstructorReturn(this, (ClipList.__proto__ || Object.getPrototypeOf(ClipList)).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, (ClipList.__proto__ || Object.getPrototypeOf(ClipList)).call(this, props, context));
+
+        _this.state = {
+            items: new _dataStore2.default().componentData
+        };
+        return _this;
     }
 
     _createClass(ClipList, [{
-        key: "showDataStore",
-        value: function showDataStore() {
-            console.log("---> data store length:", new _dataStore2.default().data.length);
+        key: "updateData",
+        value: function updateData() {
+            this.setState({ items: new _dataStore2.default().componentData });
         }
     }, {
         key: "render",
         value: function render() {
+            var clips = this.state.items.map(function (item, index) {
+                return _react2.default.createElement(_clipItem2.default, { key: index, data: item });
+            });
             return _react2.default.createElement(
                 "ul",
                 null,
-                _react2.default.createElement(_clipItem2.default, null),
-                _react2.default.createElement(_clipItem2.default, null)
+                clips
             );
         }
     }]);
@@ -119,6 +150,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var _instance = null;
 var _data = null;
 
+function getDateString(dateObj) {
+    if (dateObj && dateObj.constructor.name.toLowerCase() == "date") {
+        var parts = ("" + dateObj).split(" ");
+        var mm = parts[1];
+        var dd = parts[2];
+        var yy = parts[3];
+        return mm + " " + dd + ", " + yy;
+    }
+
+    return "";
+}
+
 var DataStore = function () {
     function DataStore() {
         _classCallCheck(this, DataStore);
@@ -141,6 +184,20 @@ var DataStore = function () {
         get: function get() {
             return _data;
         }
+    }, {
+        key: "componentData",
+        get: function get() {
+            var toReturn = _data.map(function (item) {
+                return {
+                    id: item.id,
+                    text: item.plaintext,
+                    fileName: item.fileName,
+                    timeString: getDateString(item.timestamp)
+                };
+            });
+
+            return toReturn;
+        }
     }]);
 
     return DataStore;
@@ -149,6 +206,7 @@ var DataStore = function () {
 exports.default = DataStore;
 
 },{}],4:[function(require,module,exports){
+(function (process,__dirname){
 "use strict";
 
 var _dataStore = require("./dataStore");
@@ -169,16 +227,18 @@ var _clipList2 = _interopRequireDefault(_clipList);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var listHandle = _reactDom2.default.render(_react2.default.createElement(_clipList2.default, null), document.getElementById("app"));
+console.log(process.cwd(), __dirname);
+
+/********************************************************************* 
+ * Now render the application using the ClipList component
+**********************************************************************/
+
+
+var clipList = _reactDom2.default.render(_react2.default.createElement(_clipList2.default, null), document.getElementById("app"));
 
 /********************************************************************* 
  * Setup the electron specific functionality viz. IPC to listen
  * to events from the main thread
-**********************************************************************/
-
-
-/********************************************************************* 
- * Now render the application using the ClipList component
 **********************************************************************/
 var electron = window.require("electron");
 var ipc = electron.ipcRenderer;
@@ -190,13 +250,15 @@ ipc.send("mainWindow_init", "");
 //when new data is received from the main thread, simply
 //save that new data item
 ipc.on("_newData", function (e, a) {
-  if (a) {
-    new _dataStore2.default().save(a);
-    listHandle.showDataStore();
-  }
+    if (a) {
+        a.timestamp = new Date();
+        new _dataStore2.default().save(a);
+        clipList.updateData();
+    }
 });
 
-},{"./clipList":2,"./dataStore":3,"react":181,"react-dom":30}],5:[function(require,module,exports){
+}).call(this,require('_process'),"/app/js")
+},{"./clipList":2,"./dataStore":3,"_process":29,"react":181,"react-dom":30}],5:[function(require,module,exports){
 (function (process){
 'use strict';
 
