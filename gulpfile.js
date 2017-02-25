@@ -48,22 +48,6 @@ gulp.task('js', function() {
     .pipe(gulp.dest(distPaths.srcDir));                              
 });
 
-gulp.task('others', function(){
-    var listOtherFiles = fs.readdirSync(srcPaths.othersDir);
-    for(var i in listOtherFiles){
-        var file = srcPaths.othersDir + listOtherFiles[i];
-        browserify({                                                 
-            extensions: ['.js'],                                    
-            entries: file,
-            transform: [babelify.configure({presets: ["es2015"]})]
-        })
-        .bundle()                                                           
-        .on("error",function(err){console.log("Error : " + err.message);})  
-        .pipe(source(listOtherFiles[i]))                               
-        .pipe(gulp.dest(distPaths.srcDir));
-    }
-});
-
 
 gulp.task("html",function(){
     gulp.src(srcPaths.htmlDir + "/*")
@@ -75,4 +59,4 @@ gulp.task("img", function(){
         .pipe(gulp.dest(distPaths.imgDir))
 });
 
-gulp.task("default", ['clean','js','others','less','html','img'], ()=>{});
+gulp.task("default", ['clean','js','less','html','img'], ()=>{});

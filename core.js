@@ -2,11 +2,16 @@ const electron = require('electron');
 const ipcMain = electron.ipcMain;
 const {app, BrowserWindow} = electron;
 const fs = require("fs");
+const uuid = require("node-uuid");
+const ClipWatcher = require("./clipWatcher");
+
+var distDir = "./dist/";
+var eventHandle_main = null;
 
 app.on("ready", function(){
 
     //create the main window
-    let mainWindow = new BrowserWindow({
+    let renderProc = new BrowserWindow({
         minWidth: 390, 
         width: 400,
         height: 800,
@@ -14,47 +19,40 @@ app.on("ready", function(){
         backgroundColor: '#ededed'   
     });
 
-    let clipWatcher = new BrowserWindow({
-        width: 0,
-        height: 0,
-        show: false
-    });
-
-    let eventHandle_main = null;
-    let eventHandle_clip = null;
-
     //render the main window
-    mainWindow.loadURL(`file://${__dirname}/dist/index.html`);
-    mainWindow.webContents.openDevTools({mode: "detach"});
-
-    //render the clip watcher window
-    clipWatcher.loadURL(`file://${__dirname}/dist/clipwatcher.html`);    
-    //clipWatcher.webContents.openDevTools({mode: "detach"});
+    renderProc.loadURL(`file://${__dirname}/dist/index.html`);
+    renderProc.webContents.openDevTools({mode: "detach"});
 
     //handle init events for both windows and save their event handles
     //we'll need them later to communicate between these windows
     ipcMain.on("mainWindow_init",(e,a)=>{ eventHandle_main = e;});
-    ipcMain.on("clipWatcher_init",(e,a)=>{ eventHandle_clip = e;});
 
-    //handle 'clipWatcher_newClip' -> fired by clipWatcher when new clip
-    //data is available
-    ipcMain.on("clipWatcher_newClip",(e,data)=>{
-        //now push this to the mainWindow using its handle
-        if(data) {
-            data.fileName = null;
-        
-            if(data['image']){
-                var distDir = "./dist/" ;
-                var fileName = data.id + ".png";
-                data.fileName = fileName;
-                fs.writeFileSync(distDir + fileName,data.image,"binary");
-            }
-            
-            eventHandle_main.sender.send('_newData',data);
-        }
-    });
+    //create a clip watcher and start monitoring the clipboard for changes
+    var clipWatcher = new ClipWatcher(distDir, actionOnNewClip);
+    clipWatcher.startWatching(uuid);
 });
 
+function actionOnNewClip(content){
 
+    //new clipboard content was posted, do something with it
+    var _id = uuid.v1();
 
+    var packetToSend = {
+        plaintext: content.plaintext,
+        id: _id,
+        fileName: null,
+        timestamp: new Date()
+    };
+
+    if(content.isImage && content.image){
+        var imageData = content.image.toPNG();
+        var fileName = _id + ".png";
+        fs.writeFileSync(distDir + fileName, imageData, "binary");
+        packetToSend.fileName = fileName;
+    }
+
+    
+    //post this slightly slimmer packet to the render process
+    if(eventHandle_main) eventHandle_main.sender.send('_newData',packetToSend);
+}
 
