@@ -9,6 +9,12 @@ class ClipList extends React.Component{
         this.state = {
             items: new DataStore().componentData
         }
+
+        this.clipItemSelected = this.clipItemSelected.bind(this);
+    }
+
+    clipItemSelected(item){
+        if(this.props.actionSelected) this.props.actionSelected(item);
     }
     
     updateData(){
@@ -16,7 +22,7 @@ class ClipList extends React.Component{
     }
 
     render(){
-        var clips = this.state.items.map((item,index)=>{return <ClipItem key={index} data={item}/>});
+        var clips = this.state.items.map((item,index)=>{return <ClipItem key={index} data={item} callbackParent={this.clipItemSelected}/>});
         return (
             <ul>{clips}</ul>
         );

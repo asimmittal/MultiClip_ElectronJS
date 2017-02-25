@@ -1,6 +1,18 @@
 import React from "react";
 
 class ClipItem extends React.Component{
+
+    constructor(props){
+        super(props);
+        this.clickItem = this.clickItem.bind(this);
+    }
+
+    clickItem(){
+        var data = this.props.data;
+        var callback = this.props.callbackParent;
+        if(callback) callback(data);
+    }
+
     render(){
         var data = this.props.data;
         var isImage = (data.fileName && data.fileName.length > 0) ? true: false;
@@ -13,7 +25,7 @@ class ClipItem extends React.Component{
         var tstamp = data.timeString;
         
         return(
-            <li className="clipItem">
+            <li className="clipItem" onClick={this.clickItem}>
                 <div className={"typeIcon " + classType}></div>
                 <div className="container">
                     <div className="label" style={{display: lblStyle}}>{label}</div>

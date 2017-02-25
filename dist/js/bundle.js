@@ -22,13 +22,23 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var ClipItem = function (_React$Component) {
     _inherits(ClipItem, _React$Component);
 
-    function ClipItem() {
+    function ClipItem(props) {
         _classCallCheck(this, ClipItem);
 
-        return _possibleConstructorReturn(this, (ClipItem.__proto__ || Object.getPrototypeOf(ClipItem)).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, (ClipItem.__proto__ || Object.getPrototypeOf(ClipItem)).call(this, props));
+
+        _this.clickItem = _this.clickItem.bind(_this);
+        return _this;
     }
 
     _createClass(ClipItem, [{
+        key: 'clickItem',
+        value: function clickItem() {
+            var data = this.props.data;
+            var callback = this.props.callbackParent;
+            if (callback) callback(data);
+        }
+    }, {
         key: 'render',
         value: function render() {
             var data = this.props.data;
@@ -43,7 +53,7 @@ var ClipItem = function (_React$Component) {
 
             return _react2.default.createElement(
                 'li',
-                { className: 'clipItem' },
+                { className: 'clipItem', onClick: this.clickItem },
                 _react2.default.createElement('div', { className: "typeIcon " + classType }),
                 _react2.default.createElement(
                     'div',
@@ -109,10 +119,17 @@ var ClipList = function (_React$Component) {
         _this.state = {
             items: new _dataStore2.default().componentData
         };
+
+        _this.clipItemSelected = _this.clipItemSelected.bind(_this);
         return _this;
     }
 
     _createClass(ClipList, [{
+        key: "clipItemSelected",
+        value: function clipItemSelected(item) {
+            if (this.props.actionSelected) this.props.actionSelected(item);
+        }
+    }, {
         key: "updateData",
         value: function updateData() {
             this.setState({ items: new _dataStore2.default().componentData });
@@ -120,8 +137,10 @@ var ClipList = function (_React$Component) {
     }, {
         key: "render",
         value: function render() {
+            var _this2 = this;
+
             var clips = this.state.items.map(function (item, index) {
-                return _react2.default.createElement(_clipItem2.default, { key: index, data: item });
+                return _react2.default.createElement(_clipItem2.default, { key: index, data: item, callbackParent: _this2.clipItemSelected });
             });
             return _react2.default.createElement(
                 "ul",
@@ -234,7 +253,7 @@ console.log(process.cwd(), __dirname);
 **********************************************************************/
 
 
-var clipList = _reactDom2.default.render(_react2.default.createElement(_clipList2.default, null), document.getElementById("app"));
+var clipList = _reactDom2.default.render(_react2.default.createElement(_clipList2.default, { actionSelected: itemSelected }), document.getElementById("app"));
 
 /********************************************************************* 
  * Setup the electron specific functionality viz. IPC to listen
@@ -256,6 +275,10 @@ ipc.on("_newData", function (e, a) {
         clipList.updateData();
     }
 });
+
+function itemSelected(item) {
+    console.log("--> you selected", item);
+}
 
 }).call(this,require('_process'),"/app/js")
 },{"./clipList":2,"./dataStore":3,"_process":29,"react":181,"react-dom":30}],5:[function(require,module,exports){

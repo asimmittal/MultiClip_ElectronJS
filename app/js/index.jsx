@@ -10,7 +10,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import ClipList from "./clipList";
 
-var clipList = ReactDOM.render(<ClipList/>, document.getElementById("app"));
+var clipList = ReactDOM.render(<ClipList actionSelected={itemSelected}/>, document.getElementById("app"));
 
 /********************************************************************* 
  * Setup the electron specific functionality viz. IPC to listen
@@ -32,4 +32,8 @@ ipc.on("_newData",(e,a)=>{
         clipList.updateData();
     }
 });
+
+function itemSelected(item){
+    console.log("--> you selected", item);
+}
 
