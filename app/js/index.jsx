@@ -19,6 +19,7 @@ var clipList = ReactDOM.render(<ClipList actionSelected={itemSelected}/>, docume
 const electron = window.require("electron");
 const ipc = electron.ipcRenderer;
 const remote = electron.remote;
+const clipboard = electron.clipboard;
 
 //send an init to the main process
 ipc.send("mainWindow_init","");
@@ -34,6 +35,10 @@ ipc.on("_newData",(e,a)=>{
 });
 
 function itemSelected(item){
-    console.log("--> you selected", item);
+    var selected = new DataStore().data[item.index];
+    if(!selected.fileName && selected.plaintext){
+        console.log("--> picked", selected.plaintext, "@", item.index)
+        new DataStore().data.splice(item.index,1);
+    }
 }
 

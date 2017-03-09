@@ -10,7 +10,9 @@ class ClipItem extends React.Component{
     clickItem(){
         var data = this.props.data;
         var callback = this.props.callbackParent;
-        if(callback) callback(data);
+        if(callback){ 
+            callback(data);
+        }
     }
 
     render(){

@@ -33,9 +33,10 @@ class DataStore{
     }
 
     get componentData(){
-        var toReturn = _data.map((item)=>{
+        var toReturn = _data.map((item,i)=>{
             return {
                 id: item.id,
+                index: i,
                 text: item.plaintext,
                 fileName: item.fileName,
                 timeString: getDateString(item.timestamp)

@@ -36,7 +36,9 @@ var ClipItem = function (_React$Component) {
         value: function clickItem() {
             var data = this.props.data;
             var callback = this.props.callbackParent;
-            if (callback) callback(data);
+            if (callback) {
+                callback(data);
+            }
         }
     }, {
         key: 'render',
@@ -127,7 +129,10 @@ var ClipList = function (_React$Component) {
     _createClass(ClipList, [{
         key: "clipItemSelected",
         value: function clipItemSelected(item) {
-            if (this.props.actionSelected) this.props.actionSelected(item);
+            if (this.props.actionSelected) {
+                this.props.actionSelected(item);
+                this.updateData();
+            }
         }
     }, {
         key: "updateData",
@@ -206,9 +211,10 @@ var DataStore = function () {
     }, {
         key: "componentData",
         get: function get() {
-            var toReturn = _data.map(function (item) {
+            var toReturn = _data.map(function (item, i) {
                 return {
                     id: item.id,
+                    index: i,
                     text: item.plaintext,
                     fileName: item.fileName,
                     timeString: getDateString(item.timestamp)
@@ -262,6 +268,7 @@ var clipList = _reactDom2.default.render(_react2.default.createElement(_clipList
 var electron = window.require("electron");
 var ipc = electron.ipcRenderer;
 var remote = electron.remote;
+var clipboard = electron.clipboard;
 
 //send an init to the main process
 ipc.send("mainWindow_init", "");
@@ -277,7 +284,11 @@ ipc.on("_newData", function (e, a) {
 });
 
 function itemSelected(item) {
-    console.log("--> you selected", item);
+    var selected = new _dataStore2.default().data[item.index];
+    if (!selected.fileName && selected.plaintext) {
+        console.log("--> picked", selected.plaintext, "@", selected.index);
+        new _dataStore2.default().data.splice(selected.index, 1);
+    }
 }
 
 }).call(this,require('_process'),"/app/js")

@@ -14,7 +14,10 @@ class ClipList extends React.Component{
     }
 
     clipItemSelected(item){
-        if(this.props.actionSelected) this.props.actionSelected(item);
+        if(this.props.actionSelected){ 
+            this.props.actionSelected(item);
+            this.updateData();
+        }
     }
     
     updateData(){
