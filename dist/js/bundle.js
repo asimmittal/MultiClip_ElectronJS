@@ -286,8 +286,9 @@ ipc.on("_newData", function (e, a) {
 function itemSelected(item) {
     var selected = new _dataStore2.default().data[item.index];
     if (!selected.fileName && selected.plaintext) {
-        console.log("--> picked", selected.plaintext, "@", selected.index);
-        new _dataStore2.default().data.splice(selected.index, 1);
+        new _dataStore2.default().data.splice(item.index, 1);
+        clipboard.writeText(selected.plaintext);
+        console.log(item.index, "---> pasting back onto clipboard", selected.plaintext);
     }
 }
 

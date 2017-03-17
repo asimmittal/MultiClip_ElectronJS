@@ -35,10 +35,14 @@ ipc.on("_newData",(e,a)=>{
 });
 
 function itemSelected(item){
+    
+    if(item.index == 0) return;
+
     var selected = new DataStore().data[item.index];
     if(!selected.fileName && selected.plaintext){
-        console.log("--> picked", selected.plaintext, "@", item.index)
         new DataStore().data.splice(item.index,1);
+        clipboard.writeText(selected.plaintext);
+        console.log(item.index,"---> pasting back onto clipboard",selected.plaintext);
     }
 }
 
