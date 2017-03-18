@@ -1,7 +1,7 @@
 var clipboard = require("electron").clipboard;
 
 class ClipWatcher{
-    constructor(_imgDir, callback = null){
+    constructor(callback = null){
         this.clipContent = {
             image: null,
             html: null,
@@ -9,7 +9,6 @@ class ClipWatcher{
             isImage: null
         };
 
-        this.imgDir = _imgDir;
         this.oldContent = null;
         this.interval = null;
         this.callback = callback;
@@ -32,12 +31,21 @@ class ClipWatcher{
         var doNext = true;
 
         //if the content you grab hasn't changed then ignore the callback action
-        if(this.clipContent.image != null && this.clipContent.plaintext == this.oldContent) doNext = false;
+        if(this.clipContent.image != null && this.clipContent.plaintext == this.oldContent) {
+            doNext = false;
+        }
         else if(this.clipContent.plaintext == this.oldContent) doNext = false;
 
         if(doNext && this.callback){
             this.oldContent = this.clipContent.plaintext;
             this.callback(this.clipContent);
+        }
+    }
+
+    pasteNativeImage(nativeImageObject, text){
+        if(nativeImageObject){
+            clipboard.writeImage(nativeImageObject);
+            this.clipContent.plaintext = text;
         }
     }
 
