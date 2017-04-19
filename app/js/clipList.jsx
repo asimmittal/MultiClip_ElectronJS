@@ -1,5 +1,6 @@
 import React from "react";
 import ClipItem from "./clipItem";
+import ClipContentContainer from "./clipContentContainer";
 import DataStore from "./dataStore";
 
 class ClipList extends React.Component{
@@ -25,9 +26,14 @@ class ClipList extends React.Component{
     }
 
     render(){
-        var clips = this.state.items.map((item,index)=>{return <ClipItem key={index} data={item} callbackParent={this.clipItemSelected}/>});
         return (
-            <ul>{clips}</ul>
+            <div className="flexbox-parent">
+                <div className="clipContentArea">
+                    <h3>Clipboard content</h3>
+                    <ClipContentContainer/>
+                </div>
+                <div className="listContentArea fill-remaining"></div>
+            </div>
         );
     }
 }

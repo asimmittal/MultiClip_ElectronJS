@@ -6,80 +6,62 @@ body{
 
 #app{
     position: absolute;
-    left: 10px; 
-    right: 10px;
-    top: 5px; 
-    bottom: 5px;
-    
-    ul{
-        list-style: none;
-        padding:0;
+    left: 0px; 
+    right: 0px;
+    top: 0px; 
+    bottom: 0px;
+
+    .clipContentArea{
+        width: 100%;
+        background: #202020;
+        background: url('../img/texture.jpg');
+        
+        h3{
+            margin:0;
+            padding: 10px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 0.85em;
+            font-weight: lighter;
+            color: white;
+        }
+
+        >div{
+            background: white;
+            display: flex;
+            margin: 10px;
+            margin-top:0;
+            min-height: 100px;
+            border-radius: 5px;
+            left:0; right: 0;
+
+            .nocontent{
+                background:red;
+                flex:1;
+                margin:10px;
+            }
+        }
+
+        .hollow{
+            border: 1px dashed white;
+            background: transparent;
+        }
     }
 
-    .clipItem{
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 12px;
-        min-height: @itemMinHeight;
-        border-radius: 5px;
-        margin:10px;
-        margin-bottom:0;
-        background: white;
+    .listContentArea{
+        width: 100%;
+        background: blue;
+    }
+
+    .flexbox-parent{
+        width: 100%;
+        height: 100%;
         display: flex;
-        overflow: hidden;
-        align-items: center;
-        padding: 2px;
-        box-shadow: 0px 5px 5px -6px rgba(0,0,0,0.75);
-
-        &:hover{
-            box-shadow: 0px 5px 12px -6px rgba(0,0,0,0.75);
-        }
-
-        .typeIcon{
-            background: lightgray;
-            height: 50px;
-            width: 50px;
-            margin:5px;
-        }
-
-        .image{
-            background: url('../img/iconImg.png') no-repeat;
-            background-size: contain;
-        }
-
-        .text{
-            background: url('../img/iconText.png') no-repeat;
-            background-size: contain;
-        }
-
-        .container{
-            //background: pink;
-            min-height: @itemMinHeight;
-            flex-grow: 1;
-            margin-left:2px;
-
-            .label{
-                width: 270px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                margin-top:10px;
-                font-size:1.2em;
-            }
-
-            .img{
-                width: 97%;
-                height: 25%;
-                border: 1px solid #d0d0d0;
-                margin-top: 10px;
-                background-repeat:no-repeat;
-            }
-
-            .tstamp{
-                margin-top: 10px;
-                margin-bottom: 10px;
-                color: gray;
-                font-size: 0.85em;
-            }
-        }
+        flex-direction: column;
+        background: white;
+    }
+    
+    .fill-remaining{
+        flex: 1;
     }
 }
+

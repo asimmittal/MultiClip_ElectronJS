@@ -34,16 +34,27 @@ class DataStore{
 
     get componentData(){
         var toReturn = _data.map((item,i)=>{
-            return {
-                id: item.id,
-                index: i,
-                text: item.plaintext,
-                fileName: item.fileName,
-                timeString: getDateString(item.timestamp)
-            }
+            return this.uiDataItemFor(i,item);
         });
 
         return toReturn;
+    }
+
+    get clipboardContentItem(){
+        return this.uiDataItemFor(0);
+    }
+
+    uiDataItemFor(index, _item){
+        var item = _item || _data[index];
+        if(!item) return null;
+
+        return {
+            id: item.id,
+            index: index,
+            text: item.plaintext,
+            fileName: item.fileName,
+            timeString: getDateString(item.timestamp)
+        }
     }
 }
 
