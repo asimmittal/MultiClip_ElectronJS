@@ -26,13 +26,15 @@ class ClipList extends React.Component{
     }
 
     render(){
+
         return (
             <div className="flexbox-parent">
                 <div className="clipContentArea">
-                    <h3>Clipboard content</h3>
                     <ClipContentContainer/>
                 </div>
-                <div className="listContentArea fill-remaining"></div>
+                <div className="listContentArea fill-remaining">
+                    
+                </div>
             </div>
         );
     }

@@ -1,5 +1,7 @@
 body {
   background: lightgray;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: ligther;
 }
 #app {
   position: absolute;
@@ -25,20 +27,20 @@ body {
   background: white;
   display: flex;
   margin: 10px;
-  margin-top: 0;
   min-height: 100px;
   border-radius: 5px;
   left: 0;
   right: 0;
 }
-#app .clipContentArea > div .nocontent {
-  background: red;
-  flex: 1;
-  margin: 10px;
-}
 #app .clipContentArea .hollow {
   border: 1px dashed white;
   background: transparent;
+  color: white;
+  font-weight: bolder;
+  text-align: center;
+  display: block;
+  height: 100px;
+  line-height: 6;
 }
 #app .listContentArea {
   width: 100%;
