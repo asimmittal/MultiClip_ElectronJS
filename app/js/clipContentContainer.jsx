@@ -37,10 +37,21 @@ class ClipContentContainer extends React.Component{
             else if(Helpers.isUrl(currentClip.text)) type = 'url';
             else type = 'text';
 
+            var strClassIcon = "icon " + ((type == 'file') ? 'iconImage': 'iconText');
+            var dateTimeString = currentClip.timeString;
+            var contentBg = (type == 'file') ? currentClip.fileName : '';
+            var contentHtml = (type != 'file') ? currentClip.text : <img src={contentBg}></img>;
             
             dom = (
                 <div>
-
+                    <div className="loader">
+                        <div/>
+                    </div>
+                    <div className="content" >{contentHtml}</div>
+                    <div className="meta">
+                        <div className={strClassIcon}></div>
+                        <div className="datetime">{dateTimeString}</div>
+                    </div>
                 </div>
             );
         }

@@ -25,12 +25,74 @@ body {
 }
 #app .clipContentArea > div {
   background: white;
-  display: flex;
+  position: relative;
   margin: 10px;
   min-height: 100px;
   border-radius: 5px;
   left: 0;
   right: 0;
+  overflow: hidden;
+  padding: 5px;
+  transition: height 0.3s;
+}
+#app .clipContentArea > div .loader {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+}
+#app .clipContentArea > div .loader > div {
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  background: url('../img/loader.gif') no-repeat;
+  background-size: cover;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
+  overflow: auto;
+  opacity: 0.8;
+}
+#app .clipContentArea > div .content {
+  min-height: 50px;
+  width: 100%;
+  background: pink;
+  margin-bottom: 5px;
+}
+#app .clipContentArea > div .content img {
+  width: 100%;
+}
+#app .clipContentArea > div .meta {
+  width: 100%;
+  height: 20px;
+}
+#app .clipContentArea > div .meta .icon {
+  height: 20px;
+  width: 20px;
+  float: left;
+}
+#app .clipContentArea > div .meta .datetime {
+  height: 20px;
+  width: 150px;
+  float: right;
+  font-size: 0.6em;
+  color: lightgray;
+  line-height: 2;
+  text-align: right;
+}
+#app .clipContentArea > div .meta .iconImage {
+  background: url("../img/iconImg.png") no-repeat;
+  background-size: contain;
+}
+#app .clipContentArea > div .meta .iconText {
+  background: url("../img/iconText.png") no-repeat;
+  background-size: contain;
 }
 #app .clipContentArea .hollow {
   border: 1px dashed white;
