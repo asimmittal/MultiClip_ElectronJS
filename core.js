@@ -5,6 +5,7 @@ const fs = require("fs");
 const uuid = require("node-uuid");
 const ClipWatcher = require("./clipWatcher");
 
+
 var distDir = "./dist/";
 var saveDir = "./saved/";
 var eventHandle_main = null;
@@ -59,6 +60,8 @@ app.on("ready", function(){
             fileName: null,
             timestamp: new Date()
         };
+
+        if(eventHandle_main) eventHandle_main.sender.send('_newClipStart',packetToSend);
 
         if(content.isImage && content.image){
             var imageData = content.image.toPNG();

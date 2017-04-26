@@ -21,8 +21,14 @@ const ipc = electron.ipcRenderer;
 const remote = electron.remote;
 const clipboard = electron.clipboard;
 
+import Events from "./emitter.js";
+
 //send an init to the main process
 ipc.send("mainWindow_init","");
+
+ipc.on("_newClipStart", ()=>{
+    Events.send("newClipStart")
+});
 
 //when new data is received from the main thread, simply
 //save that new data item
@@ -32,6 +38,11 @@ ipc.on("_newData",(e,a)=>{
         new DataStore().save(a);
         clipList.updateData();
     }
+
+    //a little delayed gratification
+    setTimeout(()=>{
+        Events.send("newClipEnd");
+    }, 300);
 });
 
 function itemSelected(item){

@@ -60,10 +60,12 @@ body {
   opacity: 0.8;
 }
 #app .clipContentArea > div .content {
-  min-height: 50px;
+  min-height: 75px;
+  max-height: 200px;
   width: 100%;
   background: pink;
   margin-bottom: 5px;
+  overflow: hidden;
 }
 #app .clipContentArea > div .content img {
   width: 100%;

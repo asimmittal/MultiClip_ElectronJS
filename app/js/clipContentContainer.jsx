@@ -1,16 +1,35 @@
 import React from "react";
 import DataStore from "./dataStore";
 import Helpers from "./helpers";
+import Events from "./emitter";
 
 class ClipContentContainer extends React.Component{
 
     constructor(props){
         super(props);
+
         this.state = {
-            item: new DataStore().clipboardContentItem
+            item: new DataStore().clipboardContentItem,
+            inProgress: false
         }
+
+        this.showLoader = this.showLoader.bind(this);
+        this.hideLoader = this.hideLoader.bind(this);
+
+        Events.on('newClipStart', this.showLoader);
+        Events.on('newClipEnd', this.hideLoader)
     }
     
+    showLoader(){
+        console.time("loaderTime");
+        this.setState({inProgress: true});
+    }
+
+    hideLoader(){
+        console.timeEnd("loaderTime");
+        this.setState({inProgress: false});
+    }
+
     render(){
 
         /**
@@ -42,9 +61,11 @@ class ClipContentContainer extends React.Component{
             var contentBg = (type == 'file') ? currentClip.fileName : '';
             var contentHtml = (type != 'file') ? currentClip.text : <img src={contentBg}></img>;
             
+            var loaderStyle = {display: (this.state.inProgress) ? 'block' : 'none'};
+
             dom = (
                 <div>
-                    <div className="loader">
+                    <div className="loader" style={loaderStyle}>
                         <div/>
                     </div>
                     <div className="content" >{contentHtml}</div>
