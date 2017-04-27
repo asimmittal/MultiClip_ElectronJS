@@ -8,26 +8,42 @@ class ClipContentContainer extends React.Component{
     constructor(props){
         super(props);
 
+        this.deltaY = 80;
+
         this.state = {
             item: new DataStore().clipboardContentItem,
-            inProgress: false
+            inProgress: false,
+            isDown: false
         }
 
         this.showLoader = this.showLoader.bind(this);
         this.hideLoader = this.hideLoader.bind(this);
+        this.slideDown = this.slideDown.bind(this);
+        this.slideUp = this.slideUp.bind(this);
+        this.handleClick = this.handleClick.bind(this);
 
         Events.on('newClipStart', this.showLoader);
         Events.on('newClipEnd', this.hideLoader)
     }
+
+    handleClick(){
+
+    }
     
     showLoader(){
-        console.time("loaderTime");
-        this.setState({inProgress: true});
+        this.setState({inProgress: true, isDown: true});
     }
 
     hideLoader(){
-        console.timeEnd("loaderTime");
-        this.setState({inProgress: false});
+        this.setState({inProgress: false, isDown: true});
+    }
+
+    slideDown(){
+        this.setState({isDown: true});
+    }
+
+    slideUp(){
+        this.setState({isDown: false});
     }
 
     render(){
@@ -59,16 +75,21 @@ class ClipContentContainer extends React.Component{
             var strClassIcon = "icon " + ((type == 'file') ? 'iconImage': 'iconText');
             var dateTimeString = currentClip.timeString;
             var contentBg = (type == 'file') ? currentClip.fileName : '';
+            var contentPadding = (type != 'file') ? '5px' : '0';
             var contentHtml = (type != 'file') ? currentClip.text : <img src={contentBg}></img>;
-            
             var loaderStyle = {display: (this.state.inProgress) ? 'block' : 'none'};
+            var delY = (this.state.isDown) ? this.deltaY : 0;
+
+            var outerStyle = {
+                transform: 'translateY(' + delY + 'px)'
+            };
 
             dom = (
-                <div>
+                <div style={outerStyle} onClick={this.handleClick}>
                     <div className="loader" style={loaderStyle}>
                         <div/>
                     </div>
-                    <div className="content" >{contentHtml}</div>
+                    <div className="content" style={{padding: contentPadding}}>{contentHtml}</div>
                     <div className="meta">
                         <div className={strClassIcon}></div>
                         <div className="datetime">{dateTimeString}</div>

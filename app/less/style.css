@@ -23,17 +23,23 @@ body {
   font-weight: lighter;
   color: white;
 }
+#app .clipContentArea .slideDown {
+  transform: translateY(100px);
+}
+#app .clipContentArea .slideUp {
+  transform: translateY(0);
+}
 #app .clipContentArea > div {
   background: white;
   position: relative;
   margin: 10px;
-  min-height: 100px;
+  min-height: 50px;
   border-radius: 5px;
   left: 0;
   right: 0;
   overflow: hidden;
   padding: 5px;
-  transition: height 0.3s;
+  transition: 0.3s ease-in;
 }
 #app .clipContentArea > div .loader {
   position: absolute;
@@ -60,14 +66,14 @@ body {
   opacity: 0.8;
 }
 #app .clipContentArea > div .content {
-  min-height: 75px;
+  min-height: 50px;
   max-height: 200px;
   width: 100%;
-  background: pink;
   margin-bottom: 5px;
   overflow: hidden;
 }
 #app .clipContentArea > div .content img {
+  padding: 0;
   width: 100%;
 }
 #app .clipContentArea > div .meta {
@@ -109,6 +115,7 @@ body {
 #app .listContentArea {
   width: 100%;
   background: blue;
+  z-index: 100;
 }
 #app .flexbox-parent {
   width: 100%;

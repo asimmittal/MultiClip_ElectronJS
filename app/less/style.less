@@ -27,16 +27,24 @@ body{
             color: white;
         }
 
+        .slideDown{
+            transform: translateY(100px);
+        }
+
+        .slideUp{
+            transform: translateY(0);
+        }
+
         >div{
             background: white;
             position: relative;
             margin: 10px;
-            min-height: 100px;
+            min-height: @itemMinHeight;
             border-radius: 5px;
             left:0; right: 0;
             overflow:hidden;
             padding:5px;
-            transition: height 0.3s;
+            transition: 0.3s ease-in;
 
             .loader{
                 position: absolute;
@@ -61,14 +69,14 @@ body{
             }
 
             .content{
-                min-height: 75px;
+                min-height: @itemMinHeight;
                 max-height: 200px;
                 width: 100%;
-                background: pink;
                 margin-bottom:5px;
                 overflow:hidden;
                 
                 img{
+                    padding:0;
                     width: 100%;
                 }
             }
@@ -120,6 +128,7 @@ body{
     .listContentArea{
         width: 100%;
         background: blue;
+        z-index: 100;
     }
 
     .flexbox-parent{

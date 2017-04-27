@@ -41,11 +41,15 @@ var ClipContentContainer = function (_React$Component) {
 
         _this.state = {
             item: new _dataStore2.default().clipboardContentItem,
-            inProgress: false
+            inProgress: false,
+            isDown: false
         };
 
         _this.showLoader = _this.showLoader.bind(_this);
         _this.hideLoader = _this.hideLoader.bind(_this);
+        _this.slideDown = _this.slideDown.bind(_this);
+        _this.slideUp = _this.slideUp.bind(_this);
+        _this.handleClick = _this.handleClick.bind(_this);
 
         _emitter2.default.on('newClipStart', _this.showLoader);
         _emitter2.default.on('newClipEnd', _this.hideLoader);
@@ -53,16 +57,27 @@ var ClipContentContainer = function (_React$Component) {
     }
 
     _createClass(ClipContentContainer, [{
+        key: "handleClick",
+        value: function handleClick() {}
+    }, {
         key: "showLoader",
         value: function showLoader() {
-            console.time("loaderTime");
-            this.setState({ inProgress: true });
+            this.setState({ inProgress: true, isDown: true });
         }
     }, {
         key: "hideLoader",
         value: function hideLoader() {
-            console.timeEnd("loaderTime");
-            this.setState({ inProgress: false });
+            this.setState({ inProgress: false, isDown: true });
+        }
+    }, {
+        key: "slideDown",
+        value: function slideDown() {
+            this.setState({ isDown: true });
+        }
+    }, {
+        key: "slideUp",
+        value: function slideUp() {
+            this.setState({ isDown: false });
         }
     }, {
         key: "render",
@@ -91,13 +106,18 @@ var ClipContentContainer = function (_React$Component) {
                 var strClassIcon = "icon " + (type == 'file' ? 'iconImage' : 'iconText');
                 var dateTimeString = currentClip.timeString;
                 var contentBg = type == 'file' ? currentClip.fileName : '';
+                var contentPadding = type != 'file' ? '5px' : '0';
                 var contentHtml = type != 'file' ? currentClip.text : _react2.default.createElement("img", { src: contentBg });
-
                 var loaderStyle = { display: this.state.inProgress ? 'block' : 'none' };
+                var delY = this.state.isDown ? 100 : 0;
+
+                var outerStyle = {
+                    transform: 'translateY(' + delY + 'px)'
+                };
 
                 dom = _react2.default.createElement(
                     "div",
-                    null,
+                    { style: outerStyle, onClick: this.handleClick },
                     _react2.default.createElement(
                         "div",
                         { className: "loader", style: loaderStyle },
@@ -105,7 +125,7 @@ var ClipContentContainer = function (_React$Component) {
                     ),
                     _react2.default.createElement(
                         "div",
-                        { className: "content" },
+                        { className: "content", style: { padding: contentPadding } },
                         contentHtml
                     ),
                     _react2.default.createElement(
